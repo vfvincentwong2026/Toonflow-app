@@ -1,4 +1,4 @@
-﻿<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=Toonflow&fontSize=90&fontColor=ffffff&animation=fadeIn&fontAlignY=50" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=Toonflow&fontSize=90&fontColor=ffffff&animation=fadeIn&fontAlignY=50" width="100%"/>
 
 <p>
   <a href="https://github.com/HBAI-Ltd/Toonflow-app">
@@ -461,6 +461,42 @@ pm2 monit             # 监控面板
 > ⛔ `master` 分支不接受任何 PR ｜ ✅ 请将 PR 提交到 `develop` 分支
 >
 > 欢迎开发者们共同参与 Toonflow 的共创。如有兴趣加入，请在交流群内联系主理人 ACT
+
+---
+
+## 🔗 Nusantara 知识图谱集成（本 Fork 扩展）
+
+本 Fork 预置了 **Nusantara Knowledge Graph** 可编程供应商，可直接在 Toonflow 中调用印尼群岛的三语结构化知识库（神话、历史、地理、文化）。
+
+### 快速配置
+
+1. 进入 Toonflow UI → **设置中心** → **模型配置** → **可编程供应商**
+2. 点击 **新建供应商**，粘贴以下代码（完整代码见 `nusantara-open/toonflow-provider.ts`）
+
+```typescript
+const API_BASE = "https://nusantara-api.vfvincentwong-881.workers.dev";
+const TOKEN = "YOUR_API_TOKEN"; // 向项目方申请 trial token
+
+async function searchEntities(query: string) {
+  const resp = await fetch(`${API_BASE}/api/search?q=${encodeURIComponent(query)}`, {
+    headers: { Authorization: `Bearer ${TOKEN}` }
+  });
+  return resp.json();
+}
+// ... 更多函数见 toonflow-provider.ts
+```
+
+3. 保存后，在 ScriptAgent 的 Skill 中引用该供应商即可在剧本生成时自动注入历史背景。
+
+### 工作流：满者伯夷题材短剧
+
+1. **Toonflow** → ScriptAgent 生成剧本（调用 Nusantara API 获取 Majapahit 历史背景）
+2. **Toonflow** → ProductionAgent 在无限画布中组织分镜
+3. **导出** → 将结构化剧本 JSON 导入 Jellyfish
+4. **Jellyfish** → 利用 MCP 工具自动关联知识图谱，保持角色/场景一致性
+5. **Jellyfish** → 生成最终视频素材
+
+---
 
 ## 🛠️ 技术栈
 
